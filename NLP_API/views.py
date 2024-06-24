@@ -13,6 +13,8 @@ logger = logging.getLogger("api_logger")
 
 
 class AsyncNLPView(APIView):
+    """async class view for sentiment analysis"""
+
     @extend_schema(
         request=inline_serializer(
             name="SentimentSerializer",
@@ -31,6 +33,7 @@ class AsyncNLPView(APIView):
             inputs = serialized_data.validated_data["user_input"]
             cache_key = hash(tuple(inputs))
             cached_result = cache.get(cache_key)
+
             if cached_result:
 
                 duration = time.time() - start_time
@@ -38,13 +41,13 @@ class AsyncNLPView(APIView):
                 return Response(cached_result, status=status.HTTP_200_OK)
 
             results = [await analyze_sentiment(input) for input in inputs]
-            # for input, result in zip(inputs, results):
-            #     result_dict = {}
-            #     result_dict[input] = result
-            #     result.append(result_dict)
+            cached_result = {"results": results}
+            cache.set(cache_key, cached_result)
             duration = time.time() - start_time
             logger.info(f"Success with duration of {duration},CACHE MISS")
-            return Response({"results": results})
+            return Response({"results": results}, status=status.HTTP_200_OK)
         except Exception as e:
             logger.error(f"Error: Error type {str(e)}")
-            return Response({"result": "Something went wrong"})
+            return Response(
+                {"result": "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST
+            )
