@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  django_app:
+    image: sentiment_analysis:1
+    container_name: monrae_project
+    working_dir: /app
+    volumes:
+      - /Users/andilehlongwane/Monrae_test:/app
+    ports:
+      - 8000:8000
+    command: daphne -b 0.0.0.0 -p 8000 config.asgi:application
+
+  redis:
+    image: redis:latest
+    container_name: monrae_redis
+    ports:
+      - "6391:6379"
+    entrypoint: [ 'redis-server' ]
