@@ -56,7 +56,7 @@ class AsyncNLPView(APIView):
             logger.error(f"JSON parse error: {str(e)}")
             return Response(
                 {"result": f"JSON parse error: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status=status.HTTP_400_BAD_REQUEST
             )
         except Exception as e:
             logger.error(f"Error: Error type {str(e)}")
