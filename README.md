@@ -19,3 +19,4 @@ use apidev and testing tool and send json request using the following format
     "user_input": ["good on you","get in there"]   #add more inputs if desired
 }
 
+visit http://localhost:8000/api/schema/swagger-ui/ # to test api using swagger ui
